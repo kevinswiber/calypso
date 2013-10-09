@@ -74,9 +74,9 @@
 var query_parser = (function(){
 var parser = {trace: function trace() { },
 yy: {},
-symbols_: {"error":2,"root":3,"select_statement":4,"EOF":5,"SELECT":6,"fields":7,"where_optional":8,"orderby_optional":9,"where_clause":10,"column_list":11,"*":12,"column":13,",":14,"NAME":15,"WHERE":16,"filter":17,"conjunction":18,"AND":19,"disjunction":20,"OR":21,"predicate":22,"(":23,")":24,"NOT":25,"comparison_predicate":26,"contains_predicate":27,"location_predicate":28,"COMPARISON":29,"literal":30,"CONTAINS":31,"STRING":32,"PARAM":33,"WITHIN":34,"location":35,"NUMBER":36,"OF":37,"coordinates":38,"orderby_clause":39,"ORDERBY":40,"sort_list":41,"sort_expression":42,"direction":43,"ASC":44,"DESC":45,"boolean":46,"TRUE":47,"FALSE":48,"NULL":49,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",6:"SELECT",12:"*",14:",",15:"NAME",16:"WHERE",19:"AND",21:"OR",23:"(",24:")",25:"NOT",29:"COMPARISON",31:"CONTAINS",32:"STRING",33:"PARAM",34:"WITHIN",36:"NUMBER",37:"OF",40:"ORDERBY",44:"ASC",45:"DESC",47:"TRUE",48:"FALSE",49:"NULL"},
-productions_: [0,[3,2],[4,4],[4,2],[7,1],[7,1],[11,1],[11,3],[13,1],[8,0],[8,1],[10,2],[18,3],[20,3],[17,1],[17,1],[17,1],[17,3],[17,2],[22,1],[22,1],[22,1],[26,3],[27,3],[27,3],[28,3],[35,3],[38,3],[9,0],[9,1],[39,2],[41,1],[41,3],[42,2],[43,0],[43,1],[43,1],[46,1],[46,1],[30,1],[30,1],[30,1],[30,1],[30,1]],
+symbols_: {"error":2,"root":3,"select_statement":4,"EOF":5,"SELECT":6,"fields":7,"where_optional":8,"orderby_optional":9,"where_clause":10,"column_list":11,"*":12,"column_field":13,",":14,"NAME":15,"AS":16,"column":17,"WHERE":18,"filter":19,"conjunction":20,"AND":21,"disjunction":22,"OR":23,"predicate":24,"(":25,")":26,"NOT":27,"comparison_predicate":28,"contains_predicate":29,"location_predicate":30,"COMPARISON":31,"literal":32,"CONTAINS":33,"STRING":34,"PARAM":35,"WITHIN":36,"location":37,"NUMBER":38,"OF":39,"coordinates":40,"orderby_clause":41,"ORDERBY":42,"sort_list":43,"sort_expression":44,"direction":45,"ASC":46,"DESC":47,"boolean":48,"TRUE":49,"FALSE":50,"NULL":51,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",6:"SELECT",12:"*",14:",",15:"NAME",16:"AS",18:"WHERE",21:"AND",23:"OR",25:"(",26:")",27:"NOT",31:"COMPARISON",33:"CONTAINS",34:"STRING",35:"PARAM",36:"WITHIN",38:"NUMBER",39:"OF",42:"ORDERBY",46:"ASC",47:"DESC",49:"TRUE",50:"FALSE",51:"NULL"},
+productions_: [0,[3,2],[4,4],[4,2],[7,1],[7,1],[11,1],[11,3],[13,1],[13,3],[17,1],[8,0],[8,1],[10,2],[20,3],[22,3],[19,1],[19,1],[19,1],[19,3],[19,2],[24,1],[24,1],[24,1],[28,3],[29,3],[29,3],[30,3],[37,3],[40,3],[9,0],[9,1],[41,2],[43,1],[43,3],[44,2],[45,0],[45,1],[45,1],[48,1],[48,1],[32,1],[32,1],[32,1],[32,1],[32,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -88,46 +88,50 @@ case 2: this.$ = new yy.SelectStatementNode($$[$0-2], $$[$0-1], $$[$0]);
 break;
 case 3: this.$ = new yy.SelectStatementNode(new yy.FieldListNode('*'), $$[$0-1], $$[$0]); 
 break;
-case 5: this.$ = new yy.FieldListNode('*'); 
+case 5: this.$ = new yy.FieldListNode(new yy.ColumnNode('*')); 
 break;
 case 6: this.$ = new yy.FieldListNode($$[$0]); 
 break;
 case 7: $$[$0-2].push($$[$0]); this.$ = $$[$0-2]; 
 break;
-case 11: this.$ = new yy.FilterNode($$[$0]); 
+case 8: this.$ = new yy.ColumnNode($$[$0]) 
 break;
-case 12: this.$ = new yy.ConjunctionNode($$[$0-2], $$[$0]); 
+case 9: this.$ = new yy.ColumnNode($$[$0-2], $$[$0]) 
 break;
-case 13: this.$ = new yy.DisjunctionNode($$[$0-2], $$[$0]); 
+case 13: this.$ = new yy.FilterNode($$[$0]); 
 break;
-case 17: this.$ = $$[$0-1] 
+case 14: this.$ = new yy.ConjunctionNode($$[$0-2], $$[$0]); 
 break;
-case 18: this.$ = $$[$0].negate(); 
+case 15: this.$ = new yy.DisjunctionNode($$[$0-2], $$[$0]); 
 break;
-case 22: this.$ = new yy.ComparisonPredicateNode($$[$0-2], $$[$0-1], $$[$0]); 
+case 19: this.$ = $$[$0-1] 
 break;
-case 23: this.$ = new yy.ContainsPredicateNode($$[$0-2], $$[$0]); 
+case 20: this.$ = $$[$0].negate(); 
 break;
-case 24: this.$ = new yy.ContainsPredicateNode($$[$0-2], $$[$0]); 
+case 24: this.$ = new yy.ComparisonPredicateNode($$[$0-2], $$[$0-1], $$[$0]); 
 break;
-case 25: this.$ = new yy.LocationPredicateNode($$[$0-2], $$[$0]); 
+case 25: this.$ = new yy.ContainsPredicateNode($$[$0-2], $$[$0]); 
 break;
-case 26: this.$ = new yy.LocationNode($$[$0-2], $$[$0]); 
+case 26: this.$ = new yy.ContainsPredicateNode($$[$0-2], $$[$0]); 
 break;
-case 27: this.$ = new yy.CoordinatesNode($$[$0-2], $$[$0]); 
+case 27: this.$ = new yy.LocationPredicateNode($$[$0-2], $$[$0]); 
 break;
-case 30: this.$ = new yy.OrderByNode($$[$0]); 
+case 28: this.$ = new yy.LocationNode($$[$0-2], $$[$0]); 
 break;
-case 31: this.$ = new yy.SortListNode($$[$0]); 
+case 29: this.$ = new yy.CoordinatesNode($$[$0-2], $$[$0]); 
 break;
-case 32: $$[$0-2].push($$[$0]); this.$ = $$[$0-2]; 
+case 32: this.$ = new yy.OrderByNode($$[$0]); 
 break;
-case 33: this.$ = new yy.SortNode($$[$0-1], $$[$0]); 
+case 33: this.$ = new yy.SortListNode($$[$0]); 
+break;
+case 34: $$[$0-2].push($$[$0]); this.$ = $$[$0-2]; 
+break;
+case 35: this.$ = new yy.SortNode($$[$0-1], $$[$0]); 
 break;
 }
 },
-table: [{3:1,4:2,6:[1,3],10:4,16:[1,5]},{1:[3]},{5:[1,6]},{7:7,11:8,12:[1,9],13:10,15:[1,11]},{5:[2,28],9:12,39:13,40:[1,14]},{13:24,15:[1,11],17:15,18:17,20:18,22:16,23:[1,19],25:[1,20],26:21,27:22,28:23},{1:[2,1]},{5:[2,9],8:25,10:26,16:[1,5],40:[2,9]},{5:[2,4],14:[1,27],16:[2,4],40:[2,4]},{5:[2,5],16:[2,5],40:[2,5]},{5:[2,6],14:[2,6],16:[2,6],40:[2,6]},{5:[2,8],14:[2,8],16:[2,8],29:[2,8],31:[2,8],34:[2,8],40:[2,8]},{5:[2,3]},{5:[2,29]},{15:[1,30],41:28,42:29},{5:[2,11],19:[1,31],21:[1,32],40:[2,11]},{5:[2,14],19:[2,14],21:[2,14],24:[2,14],40:[2,14]},{5:[2,15],19:[2,15],21:[2,15],24:[2,15],40:[2,15]},{5:[2,16],19:[2,16],21:[2,16],24:[2,16],40:[2,16]},{13:24,15:[1,11],17:33,18:17,20:18,22:16,23:[1,19],25:[1,20],26:21,27:22,28:23},{13:24,15:[1,11],17:34,18:17,20:18,22:16,23:[1,19],25:[1,20],26:21,27:22,28:23},{5:[2,19],19:[2,19],21:[2,19],24:[2,19],40:[2,19]},{5:[2,20],19:[2,20],21:[2,20],24:[2,20],40:[2,20]},{5:[2,21],19:[2,21],21:[2,21],24:[2,21],40:[2,21]},{29:[1,35],31:[1,36],34:[1,37]},{5:[2,28],9:38,39:13,40:[1,14]},{5:[2,10],40:[2,10]},{13:39,15:[1,11]},{5:[2,30],14:[1,40]},{5:[2,31],14:[2,31]},{5:[2,34],14:[2,34],43:41,44:[1,42],45:[1,43]},{13:24,15:[1,11],17:44,18:17,20:18,22:16,23:[1,19],25:[1,20],26:21,27:22,28:23},{13:24,15:[1,11],17:45,18:17,20:18,22:16,23:[1,19],25:[1,20],26:21,27:22,28:23},{19:[1,31],21:[1,32],24:[1,46]},{5:[2,18],19:[2,18],21:[2,18],24:[2,18],40:[2,18]},{30:47,32:[1,49],33:[1,50],36:[1,48],46:51,47:[1,53],48:[1,54],49:[1,52]},{32:[1,55],33:[1,56]},{35:57,36:[1,58]},{5:[2,2]},{5:[2,7],14:[2,7],16:[2,7],40:[2,7]},{15:[1,30],42:59},{5:[2,33],14:[2,33]},{5:[2,35],14:[2,35]},{5:[2,36],14:[2,36]},{5:[2,12],19:[2,12],21:[2,12],24:[2,12],40:[2,12]},{5:[2,13],19:[1,31],21:[2,13],24:[2,13],40:[2,13]},{5:[2,17],19:[2,17],21:[2,17],24:[2,17],40:[2,17]},{5:[2,22],19:[2,22],21:[2,22],24:[2,22],40:[2,22]},{5:[2,39],19:[2,39],21:[2,39],24:[2,39],40:[2,39]},{5:[2,40],19:[2,40],21:[2,40],24:[2,40],40:[2,40]},{5:[2,41],19:[2,41],21:[2,41],24:[2,41],40:[2,41]},{5:[2,42],19:[2,42],21:[2,42],24:[2,42],40:[2,42]},{5:[2,43],19:[2,43],21:[2,43],24:[2,43],40:[2,43]},{5:[2,37],19:[2,37],21:[2,37],24:[2,37],40:[2,37]},{5:[2,38],19:[2,38],21:[2,38],24:[2,38],40:[2,38]},{5:[2,23],19:[2,23],21:[2,23],24:[2,23],40:[2,23]},{5:[2,24],19:[2,24],21:[2,24],24:[2,24],40:[2,24]},{5:[2,25],19:[2,25],21:[2,25],24:[2,25],40:[2,25]},{37:[1,60]},{5:[2,32],14:[2,32]},{36:[1,62],38:61},{5:[2,26],19:[2,26],21:[2,26],24:[2,26],40:[2,26]},{14:[1,63]},{36:[1,64]},{5:[2,27],19:[2,27],21:[2,27],24:[2,27],40:[2,27]}],
-defaultActions: {6:[2,1],12:[2,3],13:[2,29],38:[2,2]},
+table: [{3:1,4:2,6:[1,3],10:4,18:[1,5]},{1:[3]},{5:[1,6]},{7:7,11:8,12:[1,9],13:10,15:[1,11]},{5:[2,30],9:12,41:13,42:[1,14]},{15:[1,25],17:24,19:15,20:17,22:18,24:16,25:[1,19],27:[1,20],28:21,29:22,30:23},{1:[2,1]},{5:[2,11],8:26,10:27,18:[1,5],42:[2,11]},{5:[2,4],14:[1,28],18:[2,4],42:[2,4]},{5:[2,5],18:[2,5],42:[2,5]},{5:[2,6],14:[2,6],18:[2,6],42:[2,6]},{5:[2,8],14:[2,8],16:[1,29],18:[2,8],42:[2,8]},{5:[2,3]},{5:[2,31]},{15:[1,32],43:30,44:31},{5:[2,13],21:[1,33],23:[1,34],42:[2,13]},{5:[2,16],21:[2,16],23:[2,16],26:[2,16],42:[2,16]},{5:[2,17],21:[2,17],23:[2,17],26:[2,17],42:[2,17]},{5:[2,18],21:[2,18],23:[2,18],26:[2,18],42:[2,18]},{15:[1,25],17:24,19:35,20:17,22:18,24:16,25:[1,19],27:[1,20],28:21,29:22,30:23},{15:[1,25],17:24,19:36,20:17,22:18,24:16,25:[1,19],27:[1,20],28:21,29:22,30:23},{5:[2,21],21:[2,21],23:[2,21],26:[2,21],42:[2,21]},{5:[2,22],21:[2,22],23:[2,22],26:[2,22],42:[2,22]},{5:[2,23],21:[2,23],23:[2,23],26:[2,23],42:[2,23]},{31:[1,37],33:[1,38],36:[1,39]},{31:[2,10],33:[2,10],36:[2,10]},{5:[2,30],9:40,41:13,42:[1,14]},{5:[2,12],42:[2,12]},{13:41,15:[1,11]},{15:[1,42]},{5:[2,32],14:[1,43]},{5:[2,33],14:[2,33]},{5:[2,36],14:[2,36],45:44,46:[1,45],47:[1,46]},{15:[1,25],17:24,19:47,20:17,22:18,24:16,25:[1,19],27:[1,20],28:21,29:22,30:23},{15:[1,25],17:24,19:48,20:17,22:18,24:16,25:[1,19],27:[1,20],28:21,29:22,30:23},{21:[1,33],23:[1,34],26:[1,49]},{5:[2,20],21:[2,20],23:[2,20],26:[2,20],42:[2,20]},{32:50,34:[1,52],35:[1,53],38:[1,51],48:54,49:[1,56],50:[1,57],51:[1,55]},{34:[1,58],35:[1,59]},{37:60,38:[1,61]},{5:[2,2]},{5:[2,7],14:[2,7],18:[2,7],42:[2,7]},{5:[2,9],14:[2,9],18:[2,9],42:[2,9]},{15:[1,32],44:62},{5:[2,35],14:[2,35]},{5:[2,37],14:[2,37]},{5:[2,38],14:[2,38]},{5:[2,14],21:[2,14],23:[2,14],26:[2,14],42:[2,14]},{5:[2,15],21:[1,33],23:[2,15],26:[2,15],42:[2,15]},{5:[2,19],21:[2,19],23:[2,19],26:[2,19],42:[2,19]},{5:[2,24],21:[2,24],23:[2,24],26:[2,24],42:[2,24]},{5:[2,41],21:[2,41],23:[2,41],26:[2,41],42:[2,41]},{5:[2,42],21:[2,42],23:[2,42],26:[2,42],42:[2,42]},{5:[2,43],21:[2,43],23:[2,43],26:[2,43],42:[2,43]},{5:[2,44],21:[2,44],23:[2,44],26:[2,44],42:[2,44]},{5:[2,45],21:[2,45],23:[2,45],26:[2,45],42:[2,45]},{5:[2,39],21:[2,39],23:[2,39],26:[2,39],42:[2,39]},{5:[2,40],21:[2,40],23:[2,40],26:[2,40],42:[2,40]},{5:[2,25],21:[2,25],23:[2,25],26:[2,25],42:[2,25]},{5:[2,26],21:[2,26],23:[2,26],26:[2,26],42:[2,26]},{5:[2,27],21:[2,27],23:[2,27],26:[2,27],42:[2,27]},{39:[1,63]},{5:[2,34],14:[2,34]},{38:[1,65],40:64},{5:[2,28],21:[2,28],23:[2,28],26:[2,28],42:[2,28]},{14:[1,66]},{38:[1,67]},{5:[2,29],21:[2,29],23:[2,29],26:[2,29],42:[2,29]}],
+defaultActions: {6:[2,1],12:[2,3],13:[2,31],40:[2,2]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -601,116 +605,112 @@ case 2:return 14
 break;
 case 3:return 12
 break;
-case 4:
-                                          this.popState(); /* in: INITIAL */
-                                          this.begin('fltr');
-                                          return 16;
-                                        
+case 4:return 16
 break;
 case 5:
                                           this.popState(); /* in: INITIAL */
-                                          this.begin('ordby');
-                                          return 40;
+                                          this.begin('fltr');
+                                          return 18;
                                         
 break;
-case 6:return 15
+case 6:
+                                          this.popState(); /* in: INITIAL */
+                                          this.begin('ordby');
+                                          return 42;
+                                        
 break;
-case 7:
+case 7:return 15
+break;
+case 8:
                                           yy_.yytext = yy_.yytext.slice(1, -1);
                                           return 15;
                                         
 break;
-case 8:return 19
-break;
 case 9:return 21
 break;
-case 10:return 25
+case 10:return 23
 break;
-case 11:return 19
+case 11:return 27
 break;
 case 12:return 21
 break;
-case 13:
+case 13:return 23
+break;
+case 14:
                                           this.popState(); /* in: INITIAL */
                                           return 5;
                                         
 break;
-case 14:
+case 15:
                                           this.begin('asgn');
                                           return 15;
                                         
 break;
-case 15:
+case 16:
                                           this.begin('asgn');
                                           yy_.yytext = yy_.yytext.slice(1, -1);
                                           return 15;
                                         
 break;
-case 16:return 23
+case 17:return 25
 break;
-case 17:return 24
+case 18:return 26
 break;
-case 18:return 29
-break;
-case 19:
-                                          yy_.yytext = letterify(yy_.yytext);
-                                          return 29;
-                                        
+case 19:return 31
 break;
 case 20:
                                           yy_.yytext = letterify(yy_.yytext);
-                                          return 29;
+                                          return 31;
                                         
 break;
-case 21:return 31
-break;
-case 22:
-                                          this.begin('loc');
-                                          return 34;
+case 21:
+                                          yy_.yytext = letterify(yy_.yytext);
+                                          return 31;
                                         
+break;
+case 22:return 33
 break;
 case 23:
-                                          this.popState(); /* in fltr */
-                                          return 33;
+                                          this.begin('loc');
+                                          return 36;
                                         
 break;
 case 24:
-                                          this.popState(); /* in: fltr */
-                                          return 32;
+                                          this.popState(); /* in fltr */
+                                          return 35;
                                         
 break;
 case 25:
                                           this.popState(); /* in: fltr */
-                                          return 36;
+                                          return 34;
                                         
 break;
 case 26:
-                                          this.popState(); /* in fltr */
-                                          yy_.yytext = true;
-                                          return 47;
+                                          this.popState(); /* in: fltr */
+                                          return 38;
                                         
 break;
 case 27:
                                           this.popState(); /* in fltr */
-                                          yy_.yytext = false;
-                                          return 48;
+                                          yy_.yytext = true;
+                                          return 49;
                                         
 break;
 case 28:
                                           this.popState(); /* in fltr */
+                                          yy_.yytext = false;
+                                          return 50;
+                                        
+break;
+case 29:
+                                          this.popState(); /* in fltr */
                                           yy_.yytext = null;
-                                          return 49;
+                                          return 51;
                                         
 break;
-case 29:return 36
+case 30:return 38
 break;
-case 30:return 37
-break;
-case 31:
-                                          this.popState(); /* in: asgn */
-                                          this.popState(); /* in: fltr */
-                                          return 19;
-                                        
+case 31:return 39
 break;
 case 32:
                                           this.popState(); /* in: asgn */
@@ -721,27 +721,33 @@ break;
 case 33:
                                           this.popState(); /* in: asgn */
                                           this.popState(); /* in: fltr */
-                                          this.begin('ordby');
-                                          return 40;
+                                          return 23;
                                         
 break;
-case 34:return 44
+case 34:
+                                          this.popState(); /* in: asgn */
+                                          this.popState(); /* in: fltr */
+                                          this.begin('ordby');
+                                          return 42;
+                                        
 break;
-case 35:return 45
+case 35:return 46
 break;
-case 36:return 15
+case 36:return 47
 break;
-case 37:
+case 37:return 15
+break;
+case 38:
                                           yy_.yytext = yy_.yytext.slice(1, -1);
                                           return 15;
                                         
 break;
-case 38:return 5
+case 39:return 5
 break;
 }
 },
-rules: [/^(?:\s+)/i,/^(?:select\b)/i,/^(?:,)/i,/^(?:\*)/i,/^(?:where\b)/i,/^(?:order by\b)/i,/^(?:([A-Za-z0-9_-][\.A-Za-z0-9_-]*))/i,/^(?:(\[(?:(?!\])[^\\]|\\.)*\]))/i,/^(?:and\b)/i,/^(?:or\b)/i,/^(?:not\b)/i,/^(?:&&)/i,/^(?:\|\|)/i,/^(?:$)/i,/^(?:([A-Za-z0-9_-][\.A-Za-z0-9_-]*))/i,/^(?:(\[(?:(?!\])[^\\]|\\.)*\]))/i,/^(?:\()/i,/^(?:\))/i,/^(?:eq|gt|lt|gte|lte\b)/i,/^(?:>=|<=)/i,/^(?:=|>|<)/i,/^(?:contains\b)/i,/^(?:within\b)/i,/^(?:(@\w+))/i,/^(?:(["'])(?:(?!\1)[^\\]|\\.)*\1)/i,/^(?:([+-]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:null\b)/i,/^(?:([+-]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))/i,/^(?:of\b)/i,/^(?:and\b)/i,/^(?:or\b)/i,/^(?:order by\b)/i,/^(?:ASC\b)/i,/^(?:DESC\b)/i,/^(?:([A-Za-z0-9_-][\.A-Za-z0-9_-]*))/i,/^(?:(\[(?:(?!\])[^\\]|\\.)*\]))/i,/^(?:$)/i],
-conditions: {"sel":{"rules":[0,2,3,4,5,6,7,13],"inclusive":false},"fltr":{"rules":[0,2,5,8,9,10,11,12,13,14,15,16,17],"inclusive":false},"asgn":{"rules":[0,18,19,20,21,22,23,24,25,26,27,28],"inclusive":false},"loc":{"rules":[0,2,29,30,31,32,33,38],"inclusive":false},"ordby":{"rules":[0,2,13,34,35,36,37],"inclusive":false},"INITIAL":{"rules":[0,1,4,38],"inclusive":true}}
+rules: [/^(?:\s+)/i,/^(?:select\b)/i,/^(?:,)/i,/^(?:\*)/i,/^(?:as\b)/i,/^(?:where\b)/i,/^(?:order by\b)/i,/^(?:([A-Za-z0-9_-][\.A-Za-z0-9_-]*))/i,/^(?:(\[(?:(?!\])[^\\]|\\.)*\]))/i,/^(?:and\b)/i,/^(?:or\b)/i,/^(?:not\b)/i,/^(?:&&)/i,/^(?:\|\|)/i,/^(?:$)/i,/^(?:([A-Za-z0-9_-][\.A-Za-z0-9_-]*))/i,/^(?:(\[(?:(?!\])[^\\]|\\.)*\]))/i,/^(?:\()/i,/^(?:\))/i,/^(?:eq|gt|lt|gte|lte\b)/i,/^(?:>=|<=)/i,/^(?:=|>|<)/i,/^(?:contains\b)/i,/^(?:within\b)/i,/^(?:(@\w+))/i,/^(?:(["'])(?:(?!\1)[^\\]|\\.)*\1)/i,/^(?:([+-]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:null\b)/i,/^(?:([+-]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?))/i,/^(?:of\b)/i,/^(?:and\b)/i,/^(?:or\b)/i,/^(?:order by\b)/i,/^(?:ASC\b)/i,/^(?:DESC\b)/i,/^(?:([A-Za-z0-9_-][\.A-Za-z0-9_-]*))/i,/^(?:(\[(?:(?!\])[^\\]|\\.)*\]))/i,/^(?:$)/i],
+conditions: {"sel":{"rules":[0,2,3,4,5,6,7,8,14],"inclusive":false},"fltr":{"rules":[0,2,6,9,10,11,12,13,14,15,16,17,18],"inclusive":false},"asgn":{"rules":[0,19,20,21,22,23,24,25,26,27,28,29],"inclusive":false},"loc":{"rules":[0,2,30,31,32,33,34,39],"inclusive":false},"ordby":{"rules":[0,2,14,35,36,37,38],"inclusive":false},"INITIAL":{"rules":[0,1,5,39],"inclusive":true}}
 };
 function letterify(op) {
   switch(op) {

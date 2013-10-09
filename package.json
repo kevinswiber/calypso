@@ -18,5 +18,12 @@
     "orm"
   ],
   "author": "Kevin Swiber <kswiber@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kevinswiber/mullet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kevinswiber/mullet/issues"
+  }
 }

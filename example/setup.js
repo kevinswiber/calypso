@@ -1,6 +1,6 @@
 var register = require('./glob_register');
 var MapConvention = require('./map_convention');
-var UsergridSession = require('../usergrid-session/usergrid_session');
+var UsergridSession = require('../').UsergridSession;
 
 var sessionOptions = {
   org: 'kevinswiber',

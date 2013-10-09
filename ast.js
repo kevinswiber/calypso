@@ -21,9 +21,16 @@ Ast.FieldListNode.prototype.push = function(field) {
   this.fields.push(field);
 };
 
+Ast.ColumnNode = function(name, alias) {
+  this.name = name;
+  this.alias = alias;
+
+  this.type = 'Column';
+};
+
 Ast.FilterNode = function(expression) {
   this.expression = expression;
-  this.type = 'Filter'
+  this.type = 'Filter';
 };
 
 Ast.NotNode = function(expression){

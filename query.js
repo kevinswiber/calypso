@@ -120,6 +120,10 @@ Query.prototype.build = function() {
   var fieldListNode = new Ast.FieldListNode();
   fieldListNode.fields = this.fields;
 
+  if (!fieldListNode.fields.length) {
+    fieldListNode.fields.push(new Ast.ColumnNode('*'));
+  }
+
   var statement = new Ast.SelectStatementNode(fieldListNode, this.filter, null);
   return { type: 'ast', value: statement };
 };

@@ -41,7 +41,23 @@ UsergridCompiler.prototype.compile = function(options) {
     return query.value;
   }
 
-  var statement = 'select ' + this.fields.join(', ');
+  var fieldMap = {};
+  var fields = [];
+  var hasFields = false;
+  var hasFieldMap = false;
+  
+  this.fields.forEach(function(field) {
+    if (field.name) {
+      fields.push(field.name);
+      hasFields = true;
+      if (field.alias) {
+        fieldMap[field.name] = field.alias;
+        hasFieldMap = true;
+      }
+    }
+  });
+
+  var statement = 'select ' + fields.join(', ');
 
   if (this.filter.length) {
     statement += ' where ' + this.filter.join(' ');
@@ -53,7 +69,8 @@ UsergridCompiler.prototype.compile = function(options) {
 
   return {
     ql: statement,
-    fields: this.fields
+    fields: hasFields ? fields : null,
+    fieldMap: hasFieldMap ? fieldMap : null
   };
 };
 

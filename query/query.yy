@@ -21,14 +21,21 @@ select_statement
 fields
   : column_list 
   | '*'
-    { $$ = new yy.FieldListNode('*'); }
+    { $$ = new yy.FieldListNode(new yy.ColumnNode('*')); }
   ;
 
 column_list
-  : column
+  : column_field
     { $$ = new yy.FieldListNode($1); }
-  | column_list ',' column
+  | column_list ',' column_field
     { $1.push($3); $$ = $1; }
+  ;
+
+column_field
+  : NAME
+    { $$ = new yy.ColumnNode($1) }
+  | NAME AS NAME
+    { $$ = new yy.ColumnNode($1, $3) }
   ;
 
 column

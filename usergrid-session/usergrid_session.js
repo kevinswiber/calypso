@@ -44,6 +44,7 @@ Session.prototype.find = function(query, cb) {
   };
 
   var fields;
+  var fieldMap;
   if (query) {
     var compilerOptions = {
       query: query,
@@ -53,6 +54,7 @@ Session.prototype.find = function(query, cb) {
     var compiled = compiler().compile(compilerOptions);
     options.qs.ql = compiled.ql;
     fields = compiled.fields;
+    fieldMap = compiled.fieldMap;
   }
 
   var options = {
@@ -69,7 +71,8 @@ Session.prototype.find = function(query, cb) {
       response.list.forEach(function(values) {
         if (fields) {
           fields.forEach(function(field, i) {
-            obj[field] = values[i];
+            var f = fieldMap[field] || field;
+            obj[f] = values[i];
           });
         } else {
           obj = values;
