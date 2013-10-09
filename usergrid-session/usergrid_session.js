@@ -110,7 +110,9 @@ Session.create = function(options, configFunc) {
   var session = new Session(options);
   var config = new SessionConfig(session);
 
-  configFunc(config);
+  if (configFunc) {
+    configFunc(config);
+  }
 
   session.init(config);
 
