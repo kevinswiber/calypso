@@ -15,7 +15,7 @@ escaped_name  \[(?:(?!\])[^\\]|\\.)*\]
                                         }
 <sel,fltr,loc,ordby>","                 return ','
 <sel>"*"                                return '*'
-<sel>"where"                            {
+<INITIAL,sel>"where"                            {
                                           this.popState(); /* in: INITIAL */
                                           this.begin('fltr');
                                           return 'WHERE';

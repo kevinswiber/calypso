@@ -2,17 +2,17 @@ var Book = require('./models/book');
 var Query = require('../query');
 var session = require('./setup')();
 
-var authorQuery = Query.of(Book)
-  .ql('select * where author=@author',
-      { author: 'Stephen Hawking' });
+var languageQuery = Query.of('books')
+  .ql('select title, author where author=@author')
+  .params({ author: 'Stephen Hawking' });
 
-var titleQuery = Query.of(Book)
+var objectQuery = Query.of(Book)
   .where('title', { contains: 'breakfast' });
 
-session.find(authorQuery, function(err, books) {
+session.find(languageQuery, function(err, books) {
   console.log(books);
 
-  session.find(titleQuery, function(err, books) {
+  session.find(objectQuery, function(err, books) {
     console.log(books);
   });
 });

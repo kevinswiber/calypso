@@ -20,14 +20,17 @@ Session.prototype.init = function(config) {
   }); 
 };
 
-function convertToModel(config, entity) {
-  var obj = Object.create(config.constructor.prototype);
-  var keys = Object.keys(config.fieldMap);
-  
-  keys.forEach(function(key) {
-    var prop = config.fieldMap[key] || key;
-    obj[key] = entity.get(prop);
-  });
+function convertToModel(config, entity, useConstructor) {
+  if (useConstructor) {
+    obj = Object.create(config.constructor.prototype);
+    var keys = Object.keys(config.fieldMap);
+    keys.forEach(function(key) {
+      var prop = config.fieldMap[key] || key;
+      obj[key] = entity[prop];
+    });
+  } else {
+    obj = entity;
+  }
 
   return obj;
 }
@@ -40,6 +43,7 @@ Session.prototype.find = function(query, cb) {
     qs: { limit: 10 }
   };
 
+  var fields;
   if (query) {
     var compilerOptions = {
       query: query,
@@ -47,18 +51,36 @@ Session.prototype.find = function(query, cb) {
     };
 
     var compiled = compiler().compile(compilerOptions);
-    options.qs.ql = compiled;
+    options.qs.ql = compiled.ql;
+    fields = compiled.fields;
   }
 
-  this.client.createCollection(options, function(err, result) {
+  var options = {
+    method: 'GET',
+    endpoint: options.type,
+    qs: options.qs
+  };
+
+  this.client.request(options, function(err, response) {
     var entities = [];
 
-    while (result.hasNextEntity()) {
-      var entity = result.getNextEntity();
+    if (response.list) {
+      if (fields) {
+        var obj = {};
+        response.list.forEach(function(values) {
+          fields.forEach(function(field, i) {
+            obj[field] = values[i];
+          });
 
-      var obj = convertToModel(config, entity);
-      
-      entities.push(obj);
+          entities.push(convertToModel(config, obj));
+        });
+      }
+    } else if(response.entities) {
+      response.entities.forEach(function(entity) {
+        var obj = convertToModel(config, entity, true);
+        
+        entities.push(obj);
+      });
     }
 
     cb(err, entities);

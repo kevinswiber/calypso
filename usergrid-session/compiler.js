@@ -5,6 +5,7 @@ var UsergridCompiler = function(options) {
   this.sorts = '';
   this.filter = [];
   this.query = [];
+  this.params = {};
 
   this.removeUUID = false;
   this.removeType = false;
@@ -34,7 +35,7 @@ UsergridCompiler.prototype.compile = function(options) {
   } else if (query.type === 'ql') {
     this.quoteStrings = false;
     var ast = parser.parse(query.value.ql);
-    console.log(ast);
+    this.params = query.value.params;
     ast.accept(this);
   } else if (query.type === 'raw') {
     return query.value;
@@ -50,7 +51,10 @@ UsergridCompiler.prototype.compile = function(options) {
     statement += ' order by ' + this.sorts;
   }
 
-  return statement;
+  return {
+    ql: statement,
+    fields: this.fields
+  };
 };
 
 UsergridCompiler.prototype.visitSelectStatement = function(statement) {
@@ -70,7 +74,7 @@ UsergridCompiler.prototype.visitSelectStatement = function(statement) {
 
 UsergridCompiler.prototype.visitFieldList = function(fieldList) {
   this.fields = fieldList.fields;
-  if (this.fields[0] !== '*') {
+  /*if (this.fields[0] !== '*') {
     if (this.fields.indexOf('uuid') === -1) {
       this.fields.push('uuid');
       this.removeUUID = true;
@@ -79,7 +83,7 @@ UsergridCompiler.prototype.visitFieldList = function(fieldList) {
       this.fields.push('type');
       this.removeType = true;
     }
-  }
+  }*/
 };
 
 UsergridCompiler.prototype.visitFilter = function(filterList) {
@@ -136,6 +140,11 @@ UsergridCompiler.prototype.visitDisjunction = function(disjunction) {
 };
 
 UsergridCompiler.prototype.visitContainsPredicate = function(contains) {
+  if (typeof contains.value === 'string'
+      && contains.value[0] === '@' && this.params) {
+    contains.value = this.params[contains.value.substring(1)];
+  }
+
   if (this.quoteStrings) {
     if (typeof contains.value === 'string') {
       contains.value = '\'' + contains.value + '\'';
@@ -154,7 +163,16 @@ UsergridCompiler.prototype.visitContainsPredicate = function(contains) {
 
 UsergridCompiler.prototype.visitComparisonPredicate = function(comparison) {
   if (!comparison.array) comparison.array = [];
-  if (this.quoteStrings) {
+
+  var isParam = false;
+
+  if (typeof comparison.value === 'string'
+      && comparison.value[0] === '@' && this.params) {
+    comparison.value = this.params[comparison.value.substring(1)];
+    isParam = true;
+  }
+
+  if (this.quoteStrings || isParam) {
     if (typeof comparison.value === 'string') {
       comparison.value = '\'' + comparison.value + '\'';
     }

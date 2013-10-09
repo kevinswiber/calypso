@@ -12,8 +12,10 @@ root
   ;
 
 select_statement
-  : SELECT fields where_clause orderby_clause
+  : SELECT fields where_optional orderby_optional
     { $$ = new yy.SelectStatementNode($2, $3, $4); }
+  | where_clause orderby_optional
+    { $$ = new yy.SelectStatementNode(new yy.FieldListNode('*'), $1, $2); }
   ; 
 
 fields
@@ -33,9 +35,13 @@ column
   : NAME
   ;
 
-where_clause
+where_optional
   : /* empty */
-  | WHERE filter 
+  | where_clause
+  ;
+
+where_clause 
+  : WHERE filter 
     { $$ = new yy.FilterNode($2); }
   ;
 
@@ -92,9 +98,13 @@ coordinates
     { $$ = new yy.CoordinatesNode($1, $3); }
   ;
 
-orderby_clause
+orderby_optional
   : /* empty */
-  | ORDERBY sort_list
+  | orderby_clause
+  ;
+
+orderby_clause
+  : ORDERBY sort_list
     { $$ = new yy.OrderByNode($2); }
   ;
 

@@ -1,4 +1,5 @@
 var Ast = require('./Ast');
+var ConstructorMap = require('./constructor_map');
 
 var Query = module.exports = function(modelConfig) {
   this.modelConfig = modelConfig;
@@ -11,8 +12,23 @@ var Query = module.exports = function(modelConfig) {
   this.raw = null;
 };
 
-Query.of = function(constructor) {
-  var query = new Query(constructor.__orm_model_config__); 
+
+Query.of = function(arg) {
+  var config;
+
+
+  if (typeof arg === 'string') {
+    var ResultSet = function() {};
+
+    config = new ConstructorMap()
+      .of(ResultSet)
+      .at(arg);
+
+  } else if(typeof arg === 'function') {
+    config = arg.__orm_model_config__;
+  }
+
+  var query = new Query(config); 
   return query;
 };
 
@@ -22,7 +38,29 @@ Query.prototype.hasDetails = function() {
 
 Query.prototype.ql = function(ql, values) {
   this.querylang = ql;
-  this.preparedValues = values;
+
+  if (values) {
+    this.params(values);
+  }
+
+  return this;
+};
+
+Query.prototype.params = function(values) {
+  var hasValues = !!this.preparedValues;
+
+  if (values && typeof values === 'object') {
+    if (!hasValues) {
+      this.preparedValues = {};
+      hasValues = true;
+    };
+
+    var self = this;
+    Object.keys(values).forEach(function(key) {
+      self.preparedValues[key] = Query.escape(values[key]);
+    });
+  }
+
   return this;
 };
 
@@ -58,11 +96,11 @@ Query.prototype.where = function(field, filter) {
   var f = null;
 
   if (keys[0] === 'contains') {
-    f = new Ast.ContainsPredicateNode(field, this.escape(filter['contains']));
+    f = new Ast.ContainsPredicateNode(field, Query.escape(filter['contains']));
   };
 
   if (keys[0] === 'equals') {
-    f = new Ast.ComparisonPredicateNode(field, 'eq', this.escape(filter['equals']));
+    f = new Ast.ComparisonPredicateNode(field, 'eq', Query.escape(filter['equals']));
   };
 
   if (this.filter) {
@@ -80,8 +118,7 @@ Query.prototype.build = function() {
   }
 
   if (this.querylang) {
-    // TODO: Sanitize
-    return { type: 'ql', value: this.querylang };
+    return { type: 'ql', value: { ql: this.querylang, params: this.preparedValues } };
   };
 
   var fieldListNode = new Ast.FieldListNode();
@@ -91,11 +128,8 @@ Query.prototype.build = function() {
   return { type: 'ast', value: statement };
 };
 
-Query.prototype.escape = function(value) {
+Query.escape = function(value) {
   var val = value;
-
-  if (this.preparedValues && this.querylang) {
-  }
 
   if (!val) {
     return '';
