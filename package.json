@@ -1,0 +1,22 @@
+{
+  "name": "mullet",
+  "version": "0.0.0",
+  "description": "A common query interface for data stores, featuring a SQL-like query language.",
+  "main": "mullet.js",
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {
+    "usergrid": "~0.10.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "query",
+    "orm"
+  ],
+  "author": "Kevin Swiber <kswiber@gmail.com>",
+  "license": "MIT"
+}

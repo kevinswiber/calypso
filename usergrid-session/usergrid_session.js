@@ -20,16 +20,16 @@ Session.prototype.init = function(config) {
   }); 
 };
 
-function convertToModel(config, entity, useConstructor) {
-  if (useConstructor) {
+function convertToModel(config, entity, isBare) {
+  if (isBare) {
+    obj = entity;
+  } else {
     obj = Object.create(config.constructor.prototype);
     var keys = Object.keys(config.fieldMap);
     keys.forEach(function(key) {
       var prop = config.fieldMap[key] || key;
       obj[key] = entity[prop];
     });
-  } else {
-    obj = entity;
   }
 
   return obj;
@@ -65,19 +65,21 @@ Session.prototype.find = function(query, cb) {
     var entities = [];
 
     if (response.list) {
-      if (fields) {
-        var obj = {};
-        response.list.forEach(function(values) {
+      var obj = {};
+      response.list.forEach(function(values) {
+        if (fields) {
           fields.forEach(function(field, i) {
             obj[field] = values[i];
           });
+        } else {
+          obj = values;
+        }
 
-          entities.push(convertToModel(config, obj));
-        });
-      }
+        entities.push(convertToModel(config, obj, config.isBare));
+      });
     } else if(response.entities) {
       response.entities.forEach(function(entity) {
-        var obj = convertToModel(config, entity, true);
+        var obj = convertToModel(config, entity, config.isBare);
         
         entities.push(obj);
       });

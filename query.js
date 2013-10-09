@@ -16,14 +16,10 @@ var Query = module.exports = function(modelConfig) {
 Query.of = function(arg) {
   var config;
 
-
   if (typeof arg === 'string') {
-    var ResultSet = function() {};
-
     config = new ConstructorMap()
-      .of(ResultSet)
-      .at(arg);
-
+      .at(arg)
+      .bare();
   } else if(typeof arg === 'function') {
     config = arg.__orm_model_config__;
   }
