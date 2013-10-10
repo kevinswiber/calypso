@@ -39,7 +39,7 @@ session.find(query, function(err, books) {
 
 ### Query.of
 
-Takes a collection name or a constructor function that has been mapped.  (See: Mappings)
+Takes a collection name or a constructor function that has been mapped.  (See: [Mappings](#mappings))
 
 Returns a Query instance.
 
@@ -67,7 +67,7 @@ var query = Query.of('books')
 
 Constructor functions can be assigned mappings.  Calypso will automatically instantiate the object when receiving query results.  Here's a quick Getting Started.
 
-1. Set up a constructor function that assigns properties to instances.
+1\. Set up a constructor function that assigns properties to instances.
 
 ```javascript
 var Book = function() {
@@ -76,7 +76,7 @@ var Book = function() {
 };
 ```
 
-2. Set up a mapping for the constructor.
+2\. Set up a mapping for the constructor.
 
 ```javascript
 var mapping = function(config) {
@@ -90,7 +90,7 @@ var mapping = function(config) {
 
 Notice we're mapping Book#writer to the data store's author property.
 
-3. Register mappings with the session.
+3\. Register mappings with the session.
 
 ```javascript
 var options = {
@@ -103,7 +103,7 @@ var session = UsergridSession.create(options, function(config) {
 });
 ```
 
-4. Query based on the JavaScript properties.
+4\. Query based on the JavaScript properties.
 
 ```javascript
 var query = Query.of(Book)
@@ -182,6 +182,8 @@ bookRepository.get(id, function(err, book) {
 });
 ```
 
+Output: `[ { title: 'A Brief History of Time', writer: 'Stephen Hawking' } ]`
+
 ## Calypso Query Language
 
 The Calypso Query Language (CaQL) has support for field selection, field aliases, filters, and ordering.
@@ -227,9 +229,13 @@ CaQL supports the following comparison expressions:
 Examples:
 
 `select * where name = "Kevin"'
+
 `select * where age > 30`
+
 `select * where age >= 30`
+
 `select * where price < 10`
+
 `select * where price <= 10`
 
 #### contains
@@ -252,7 +258,7 @@ Example: `select * where name="Kevin" and age=31`
 
 #### disjunctions
 
-CaQL has support for disjunctions, as well.
+CaQL has support for disjunctions, as well, using `or`.
 
 Example: `select * where name="Kevin" or name="Matt"`
 
