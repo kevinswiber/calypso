@@ -228,14 +228,10 @@ CaQL supports the following comparison expressions:
 
 Examples:
 
-`select * where name = "Kevin"'
-
+`select * where name = "Kevin"`
 `select * where age > 30`
-
 `select * where age >= 30`
-
 `select * where price < 10`
-
 `select * where price <= 10`
 
 #### contains
