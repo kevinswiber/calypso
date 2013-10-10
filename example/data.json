@@ -1,14 +1,14 @@
 [
   {
-    "booktitle": "The Caves of Steel",
-    "bookauthor": "Isaac Asimov"
+    "title": "The Caves of Steel",
+    "author": "Isaac Asimov"
   },
   {
-    "booktitle": "Foundation",
-    "bookauthor": "Isaac Asimov"
+    "title": "Foundation",
+    "author": "Isaac Asimov"
   },
   {
-    "booktitle": "Nineteen Eighty-Four",
-    "bookauthor": "George Orwell"
+    "title": "Nineteen Eighty-Four",
+    "author": "George Orwell"
   }
 ]

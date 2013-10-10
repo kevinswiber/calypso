@@ -1,4 +1,5 @@
 var ConstructorMap = require('./constructor_map');
+var Compiler = require('./memory_compiler');
 var SessionConfig = require('./session_config');
 
 var Session = module.exports = function(data) {
@@ -26,8 +27,22 @@ Session.prototype.find = function(query, cb) {
   var config = query.modelConfig;
   var querystring;
 
+  var ql;
+  var fields;
+  var fieldMap;
+
   if (query) {
-   query = query.toString();
+    var compilerOptions = {
+      query: query,
+      quoteStrings: true
+    };
+
+    var compiler = new Compiler();
+    var compiled = compiler.compile(compilerOptions);
+
+    ql = compiled.ql;
+    fields = compiled.fields;
+    fieldMap = compiled.fieldMap;
   }
 
   var results = this.data.map(function(datum) {
@@ -49,10 +64,11 @@ Session.create = function(data, configFunc) {
   var session = new Session(data);
   var config = new SessionConfig(session);
 
-  configFunc(config);
+  if (configFunc) {
+    configFunc(config);
+  }
 
   session.init(config);
 
   return session;
 };
-
