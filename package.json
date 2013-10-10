@@ -1,8 +1,8 @@
 {
-  "name": "mullet",
+  "name": "calypso",
   "version": "0.0.0",
   "description": "A common query interface for data stores, featuring a SQL-like query language.",
-  "main": "mullet.js",
+  "main": "calypso.js",
   "directories": {
     "example": "example"
   },
@@ -21,9 +21,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/kevinswiber/mullet.git"
+    "url": "git://github.com/kevinswiber/calypso.git"
   },
   "bugs": {
-    "url": "https://github.com/kevinswiber/mullet/issues"
+    "url": "https://github.com/kevinswiber/calypso/issues"
   }
 }
