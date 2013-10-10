@@ -1,6 +1,6 @@
 var register = require('./glob_register');
 var MapConvention = require('./map_convention');
-var UsergridSession = require('../').UsergridSession;
+var UsergridSession = require('../../calypso-usergrid');
 
 var sessionOptions = {
   orgName: 'kevinswiber',
