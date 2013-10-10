@@ -6,9 +6,7 @@
   "directories": {
     "example": "example"
   },
-  "dependencies": {
-    "usergrid": "~0.10.5"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
