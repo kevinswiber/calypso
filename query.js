@@ -1,4 +1,4 @@
-var Ast = require('./Ast');
+var Ast = require('./compiling/ast');
 var ConstructorMap = require('./constructor_map');
 
 var Query = module.exports = function(modelConfig) {

@@ -1,5 +1,5 @@
 var Ast = require('./ast');
-var parser = require('./query_parser').parser;
+var parser = require('./parser').parser;
 
 parser.yy = Ast;
 

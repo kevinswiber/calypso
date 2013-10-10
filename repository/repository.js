@@ -1,4 +1,4 @@
-var Query = require('./query');
+var Query = require('../query');
 
 var Repository = module.exports = function(session, model) {
   this.session = session;
