@@ -226,13 +226,15 @@ Example: `select title where author="Kurt Vonnegut"`
 
 CaQL supports the following comparison expressions:
 
-Examples:
+Equality: `select * where name = "Kevin"`
 
-`select * where name = "Kevin"`
-`select * where age > 30`
-`select * where age >= 30`
-`select * where price < 10`
-`select * where price <= 10`
+Greater than: `select * where age > 30`
+
+Greater than or equal to: `select * where age >= 30`
+
+Less than: `select * where price < 10`
+
+Less than or equal to: `select * where price <= 10`
 
 #### contains
 
