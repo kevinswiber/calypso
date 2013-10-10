@@ -91,16 +91,6 @@ UsergridCompiler.prototype.visitSelectStatement = function(statement) {
 
 UsergridCompiler.prototype.visitFieldList = function(fieldList) {
   this.fields = fieldList.fields;
-  /*if (this.fields[0] !== '*') {
-    if (this.fields.indexOf('uuid') === -1) {
-      this.fields.push('uuid');
-      this.removeUUID = true;
-    }
-    if (this.fields.indexOf('type') === -1) {
-      this.fields.push('type');
-      this.removeType = true;
-    }
-  }*/
 };
 
 UsergridCompiler.prototype.visitFilter = function(filterList) {
@@ -157,16 +147,16 @@ UsergridCompiler.prototype.visitDisjunction = function(disjunction) {
 };
 
 UsergridCompiler.prototype.visitContainsPredicate = function(contains) {
+  var isParam = false;
+
   if (typeof contains.value === 'string'
       && contains.value[0] === '@' && this.params) {
     contains.value = this.params[contains.value.substring(1)];
+    isParam = true;
   }
 
-  if (typeof contains.value === 'string'
-      && contains.value[0] === '"' && contains.value[contains.value.length - 1] === '"') {
-      var value = contains.value.substring(1, contains.value.length - 1);
-      value = value.replace("'", "\\'");
-      contains.value = "'" + value + "'";
+  if (typeof contains.value === 'string') {
+    contains.value = normalizeString(contains.value, isParam);
   }
 
   var expr = [contains.field, 'contains', contains.value];
@@ -178,22 +168,14 @@ UsergridCompiler.prototype.visitComparisonPredicate = function(comparison) {
   if (!comparison.array) comparison.array = [];
 
   var isParam = false;
-
   if (typeof comparison.value === 'string'
       && comparison.value[0] === '@' && this.params) {
     comparison.value = this.params[comparison.value.substring(1)];
     isParam = true;
   }
 
-  if (this.quoteStrings || isParam) {
-    if (typeof comparison.value === 'string') {
-      comparison.value = '\'' + comparison.value + '\'';
-    }
-  }
-
-  if (typeof comparison.value === 'string'
-      && comparison.value[0] === '"' && comparison.value[comparison.value.length - 1] === '"') {
-      comparison.value = '\'' + comparison.value.slice(1, -1) + '\'';
+  if (typeof comparison.value === 'string') {
+    comparison.value = normalizeString(comparison.value, isParam);
   }
 
   var expr = [comparison.field, comparison.operator, comparison.value];
@@ -202,6 +184,26 @@ UsergridCompiler.prototype.visitComparisonPredicate = function(comparison) {
   }
   comparison.array.push(expr.join(' '));
   this.filter.push(expr.join(' '));
+};
+
+var normalizeString = function(str, isParam) {
+  if (str[0] === '\'' && str[str.length - 1] === '\'') {
+    return str;
+  }
+
+  if (!isParam && str[0] === '"' && str[str.length - 1] === '"') {
+    str = str.substring(1, str.length - 1);
+  }
+
+  str = JSON.stringify(str);
+
+  str = str.substring(1, str.length - 1);
+  str = str.replace("'", "\\'");
+  str = str.replace('\\"', '"');
+
+  str = "'" + str + "'";
+
+  return str;
 };
 
 module.exports = function(options) {

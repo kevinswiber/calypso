@@ -16,7 +16,8 @@ Session.prototype.init = function(config) {
   this.config = config;
   this.client = new usergrid.client({
     orgName: this.org,
-    appName: this.app
+    appName: this.app,
+    buildCurl: true
   }); 
 };
 

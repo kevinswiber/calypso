@@ -54,9 +54,6 @@ Query.prototype.params = function(values) {
     var self = this;
     Object.keys(values).forEach(function(key) {
       var value = Query.escape(values[key]);
-      if (typeof value === 'string') {
-        value = JSON.stringify(value);
-      }
       self.preparedValues[key] = value;
     });
   }
