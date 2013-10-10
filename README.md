@@ -15,7 +15,7 @@ You'll also need a driver.  Check out the Usergrid driver here: https://github.c
 
 ## Usage
 
-```javascript```
+```javascript
 var Query = require('calypso').Query;
 var UsergridSession = require('calypso-usergrid');
 
