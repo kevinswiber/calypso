@@ -162,15 +162,11 @@ UsergridCompiler.prototype.visitContainsPredicate = function(contains) {
     contains.value = this.params[contains.value.substring(1)];
   }
 
-  if (this.quoteStrings) {
-    if (typeof contains.value === 'string') {
-      contains.value = '\'' + contains.value + '\'';
-    }
-  }
-
   if (typeof contains.value === 'string'
       && contains.value[0] === '"' && contains.value[contains.value.length - 1] === '"') {
-      contains.value = '\'' + contains.value.splice(1, -2) + '\'';
+      var value = contains.value.substring(1, contains.value.length - 1);
+      value = value.replace("'", "\\'");
+      contains.value = "'" + value + "'";
   }
 
   var expr = [contains.field, 'contains', contains.value];

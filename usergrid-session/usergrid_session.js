@@ -100,11 +100,16 @@ Session.prototype.get = function(query, id, cb) {
     name: id
   };
 
-  this.client.getEntity(options, function(err, result) {
+  var options = {
+    method: 'GET',
+    endpoint: options.type + '/' + options.name
+  };
+
+  this.client.request(options, function(err, result) {
     var obj;
 
-    if (!err) {
-      obj = convertToModel(config, result);
+    if (!err && result.entities && result.entities.length) {
+      obj = convertToModel(config, result.entities[0]);
     }
 
     cb(err, obj);
