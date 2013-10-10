@@ -3,8 +3,8 @@ var MapConvention = require('./map_convention');
 var UsergridSession = require('../').UsergridSession;
 
 var sessionOptions = {
-  org: 'kevinswiber',
-  app: 'sandbox'
+  orgName: 'kevinswiber',
+  appName: 'sandbox'
 };
 
 module.exports = function() {

@@ -4,6 +4,7 @@ var ConstructorMap = require('./constructor_map');
 var Query = module.exports = function(modelConfig) {
   this.modelConfig = modelConfig;
   this.collection = this.modelConfig.collection;
+  this.mapper = null;
   this.fields = [];
   this.filter = null;
   this.orderBy = '';
@@ -66,19 +67,23 @@ Query.prototype.raw = function(raw) {
   return this;
 };
 
+// Query API
+
 Query.prototype.select = function(fields) {
-  if (!Array.isArray(fields)) {
-    fields = [fields];
+  if (typeof fields === 'function') {
+    this.mapper = fields;
+  } else if (typeof fields === 'string') {
+    var args = Array.prototype.slice.call(arguments);
+
+    var self = this;
+    args.forEach(function(field) {
+      field = self.modelConfig.fieldMap.hasOwnProperty(field)
+                ? self.modelConfig.fieldMap[field]
+                : field;
+
+      self.fields.push(field);
+    });
   }
-
-  var self = this;
-  fields.forEach(function(field) {
-    field = self.modelConfig.fieldMap.hasOwnProperty(field)
-              ? self.modelConfig.fieldMap[field]
-              : field;
-
-    self.fields.push(field);
-  });
 
   return this;
 };

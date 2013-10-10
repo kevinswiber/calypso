@@ -1,23 +1,16 @@
 var usergrid = require('usergrid');
-var compiler = require('./compiler');
+var UsergridCompiler = require('./compiler');
 var SessionConfig = require('../session_config');
 
 var Session = module.exports = function(options) {
-  options = options || {};
-
-  this.org = options.org;
-  this.app = options.app;
-
+  this.options = options;
   this.config = null;
   this.client = null;
 };
 
 Session.prototype.init = function(config) {
   this.config = config;
-  this.client = new usergrid.client({
-    orgName: this.org,
-    appName: this.app
-  }); 
+  this.client = new usergrid.client(this.options); 
 };
 
 function convertToModel(config, entity, isBare) {
@@ -38,29 +31,22 @@ function convertToModel(config, entity, isBare) {
 Session.prototype.find = function(query, cb) {
   var config = query.modelConfig;
 
-  var options = {
-    type: config.collection,
-    qs: { limit: 10 }
-  };
-
+  var ql;
   var fields;
   var fieldMap;
   if (query) {
-    var compilerOptions = {
-      query: query,
-      quoteStrings: true
-    };
+    var compiler = new UsergridCompiler();
+    var compiled = compiler.compile({ query: query });
 
-    var compiled = compiler().compile(compilerOptions);
-    options.qs.ql = compiled.ql;
+    ql = compiled.ql;
     fields = compiled.fields;
     fieldMap = compiled.fieldMap;
   }
 
   var options = {
     method: 'GET',
-    endpoint: options.type,
-    qs: options.qs
+    endpoint: config.collection,
+    qs: { ql: ql }
   };
 
   this.client.request(options, function(err, response) {
@@ -96,13 +82,8 @@ Session.prototype.get = function(query, id, cb) {
   var config = query.modelConfig;
 
   var options = {
-    type: config.collection,
-    name: id
-  };
-
-  var options = {
     method: 'GET',
-    endpoint: options.type + '/' + options.name
+    endpoint: config.collection + '/' + id
   };
 
   this.client.request(options, function(err, result) {

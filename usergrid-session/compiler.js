@@ -1,22 +1,11 @@
 var parser = require('../parser');
 
-var UsergridCompiler = function(options) {
+var UsergridCompiler = module.exports = function() {
   this.fields = [];
   this.sorts = '';
   this.filter = [];
   this.query = [];
   this.params = {};
-
-  this.removeUUID = false;
-  this.removeType = false;
-
-  if (options && options.quoteStrings) {
-    this.quoteStrings = true;
-  }
-
-  if (options && options.uri) {
-    this.uri = options.uri;
-  }
 };
 
 UsergridCompiler.prototype.visit = function(node) {
@@ -24,16 +13,11 @@ UsergridCompiler.prototype.visit = function(node) {
 };
 
 UsergridCompiler.prototype.compile = function(options) {
-  if (options.quoteStrings) {
-    this.quoteStrings = true;
-  };
-
   var query = options.query.build();
   
   if (query.type === 'ast') {
     query.value.accept(this);
   } else if (query.type === 'ql') {
-    this.quoteStrings = false;
     var ast = parser.parse(query.value.ql);
     this.params = query.value.params;
     ast.accept(this);
@@ -205,8 +189,3 @@ var normalizeString = function(str, isParam) {
 
   return str;
 };
-
-module.exports = function(options) {
-  return new UsergridCompiler(options);
-};
-
