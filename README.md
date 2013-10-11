@@ -16,13 +16,18 @@ You'll also need a driver.  Check out the Usergrid driver here: https://github.c
 ## Usage
 
 ```javascript
-var Query = require('calypso').Query;
-var UsergridSession = require('calypso-usergrid');
+var calypso = require('calypso');
+var Query = calypso.Query;
+var UsergridDriver = require('calypso-usergrid');
 
-var session = UsergridSession.create({
-  orgName: 'kevinswiber',
-  appName: 'sandbox'
+var engine = calypso.configure({
+  driver: UsergridDriver.create({
+    orgName: 'kevinswiber',
+    appName: 'sandbox'
+  })
 });
+
+var session = engine.createSession();
 
 var query = Query.of('books')
   .ql('select title, author as writer where author=@author')
@@ -93,12 +98,16 @@ Notice we're mapping Book#writer to the data store's author property.
 3\. Register mappings with the session.
 
 ```javascript
-var options = {
-  orgName: 'kevinswiber',
-  appName: 'sandbox'
-};
+var UsergridDriver = require('calypso-usergrid');
 
-var session = UsergridSession.create(options, function(config) {
+var engine = calypso.configure({
+  driver: UsergridDriver.create({
+    orgName: 'kevinswiber',
+    appName: 'sandbox'
+  })
+});
+
+var session = engine.createSession(function(config) {
   config.add(mapping);
 });
 ```
@@ -147,7 +156,15 @@ Example:
 var calypso = require('calypso');
 var Query = calypso.Query;
 var RepositoryFactory = calypso.RepositoryFactory;
-var UsergridSession = require('calypso-usergrid');
+var UsergridDriver = require('calypso-usergrid');
+
+var engine = calypso.configure({
+  driver: UsergridDriver.create({
+    orgName: 'kevinswiber',
+    appName: 'sandbox'
+  })
+});
+
 
 var Book = function() {
   this.title = null;
@@ -162,12 +179,8 @@ var mapping = function(config) {
     .map('writer', { to: 'author' })
 };
 
-var options = {
-  orgName: 'kevinswiber',
-  appName: 'sandbox'
-};
 
-var session = UsergridSession.create(options, function(config) {
+var session = engine.createSession(function(config) {
   config.add(mapping);
 });
 
