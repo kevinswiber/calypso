@@ -27,14 +27,16 @@ var engine = calypso.configure({
   })
 });
 
-var session = engine.createSession();
+engine.build(function(err, connection) {
+  connection.open(function(err, session) {
+    var query = Query.of('books')
+      .ql('select title, author as writer where author=@author')
+      .params({ author: 'Stephen Hawking' });
 
-var query = Query.of('books')
-  .ql('select title, author as writer where author=@author')
-  .params({ author: 'Stephen Hawking' });
-
-session.find(query, function(err, books) {
-  console.log(books);
+    session.find(query, function(err, books) {
+      console.log(books);
+    });
+  });
 });
 
 // Output:
@@ -104,11 +106,14 @@ var engine = calypso.configure({
   driver: UsergridDriver.create({
     orgName: 'kevinswiber',
     appName: 'sandbox'
-  })
+  }),
+  mappings: [mapping]
 });
 
-var session = engine.createSession(function(config) {
-  config.add(mapping);
+engine.build(function(err, connection) {
+  connection.open(function(err, session) {
+    /* .... */
+  });
 });
 ```
 
@@ -158,20 +163,12 @@ var Query = calypso.Query;
 var RepositoryFactory = calypso.RepositoryFactory;
 var UsergridDriver = require('calypso-usergrid');
 
-var engine = calypso.configure({
-  driver: UsergridDriver.create({
-    orgName: 'kevinswiber',
-    appName: 'sandbox'
-  })
-});
-
-
 var Book = function() {
   this.title = null;
   this.writer = null;
 };
 
-var mapping = function(config) {
+var bookMapping = function(config) {
   config
     .of(Book)
     .at('books')
@@ -179,20 +176,28 @@ var mapping = function(config) {
     .map('writer', { to: 'author' })
 };
 
-
-var session = engine.createSession(function(config) {
-  config.add(mapping);
+var engine = calypso.configure({
+  driver: UsergridDriver.create({
+    orgName: 'kevinswiber',
+    appName: 'sandbox'
+  }),
+  mappings: [bookMapping]
 });
 
-var factory = RepositoryFactory.create(session);
+engine.build(function(err, connection) {
+  connection.open(function(err, session) {
+    var factory = RepositoryFactory.create(session);
 
-var bookRepository = factory.of(Book);
+    var bookRepository = factory.of(Book);
 
-var id = 'd4d66224-f54e-11e2-9033-b1911fc0a0cc';
+    var id = 'd4d66224-f54e-11e2-9033-b1911fc0a0cc';
 
-bookRepository.get(id, function(err, book) {
-  console.log(book);
+    bookRepository.get(id, function(err, book) {
+      console.log(book);
+    });
+  });
 });
+
 ```
 
 Output: `[ { title: 'A Brief History of Time', writer: 'Stephen Hawking' } ]`
