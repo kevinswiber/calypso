@@ -72,9 +72,17 @@ var query = Query.of('books')
 
 ### Mappings
 
-Constructor functions can be assigned mappings.  Calypso will automatically instantiate the object when receiving query results.  Here's a quick Getting Started.
+Constructor functions can be assigned mappings.  Calypso will automatically instantiate the object when receiving query results.  Here's a quick Getting Started guide.
 
-1\. Set up a constructor function that assigns properties to instances.
+1\. Require dependencies.
+
+```javascript
+var calypso = require('calypso');
+var Query = calypso.Query;
+var UsergridDriver = require('usergrid-calypso');
+```
+
+2\. Set up a constructor function that assigns properties to instances.
 
 ```javascript
 var Book = function() {
@@ -83,7 +91,7 @@ var Book = function() {
 };
 ```
 
-2\. Set up a mapping for the constructor.
+3\. Set up a mapping for the constructor.
 
 ```javascript
 var mapping = function(config) {
@@ -97,11 +105,9 @@ var mapping = function(config) {
 
 Notice we're mapping Book#writer to the data store's author property.
 
-3\. Register mappings with the session.
+4\. Register mappings with the session.
 
 ```javascript
-var UsergridDriver = require('calypso-usergrid');
-
 var engine = calypso.configure({
   driver: UsergridDriver.create({
     orgName: 'kevinswiber',
@@ -109,23 +115,21 @@ var engine = calypso.configure({
   }),
   mappings: [mapping]
 });
-
-engine.build(function(err, connection) {
-  connection.open(function(err, session) {
-    /* .... */
-  });
-});
 ```
 
-4\. Query based on the JavaScript properties.
+5\. Query based on the JavaScript properties.
 
 ```javascript
-var query = Query.of(Book)
-  .ql('where writer=@writer')
-  .params({ writer: 'Stephen Hawking' });
+engine.build(function(err, connection) {
+  connection.open(function(err, session) {
+    var query = Query.of(Book)
+      .ql('where writer=@writer')
+      .params({ writer: 'Stephen Hawking' });
 
-session.find(query, function(err, books) {
-  console.log(books);
+    session.find(query, function(err, books) {
+      console.log(books);
+    });
+  });
 });
 ```
 
