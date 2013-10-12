@@ -12,10 +12,12 @@ exports.RepositoryFactory = RepositoryFactory;
 var Engine = function(driver, mappings) {
   this.driver = driver;
 
-  mappings.forEach(function(mapping) {
-    var constructorMap = new ConstructorMap();
-    mapping(constructorMap);
-  });
+  if (mappings) {
+    mappings.forEach(function(mapping) {
+      var constructorMap = new ConstructorMap();
+      mapping(constructorMap);
+    });
+  }
 };
 
 Engine.prototype.build = function(cb) {
