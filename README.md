@@ -105,7 +105,7 @@ var mapping = function(config) {
 
 Notice we're mapping Book#writer to the data store's author property.
 
-4\. Register mappings with the session.
+4\. Configure a new Calypso engine.
 
 ```javascript
 var engine = calypso.configure({
