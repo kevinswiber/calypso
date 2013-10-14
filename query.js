@@ -105,6 +105,11 @@ Query.prototype.where = function(field, filter) {
     f = new Ast.ComparisonPredicateNode(field, 'eq', Query.escape(filter['equals']));
   };
 
+  if (['gt', 'gte', 'lt', 'lte'].indexOf(keys[0]) !== -1) {
+    var operator = keys[0];
+    f = new Ast.ComparisonPredicateNode(field, operator, Query.escape(filter[operator]));
+  }
+
   if (this.filter) {
     this.filter = new Ast.ConjunctionNode(this.filter, f);
   } else {

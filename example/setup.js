@@ -16,6 +16,10 @@ var engine = calypso.configure({
 
 module.exports = function(cb) {
   engine.build(function(err, connection) {
-    connection.open(cb);
+    if (err) {
+      return cb(err);
+    }
+
+    cb(null, connection.createSession());
   });
 };

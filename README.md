@@ -28,14 +28,14 @@ var engine = calypso.configure({
 });
 
 engine.build(function(err, connection) {
-  connection.open(function(err, session) {
-    var query = Query.of('books')
-      .ql('select title, author as writer where author=@author')
-      .params({ author: 'Stephen Hawking' });
+  var session = connection.createSession();
 
-    session.find(query, function(err, books) {
-      console.log(books);
-    });
+  var query = Query.of('books')
+    .ql('select title, author as writer where author=@author')
+    .params({ author: 'Stephen Hawking' });
+
+  session.find(query, function(err, books) {
+    console.log(books);
   });
 });
 
@@ -121,14 +121,14 @@ var engine = calypso.configure({
 
 ```javascript
 engine.build(function(err, connection) {
-  connection.open(function(err, session) {
-    var query = Query.of(Book)
-      .ql('where writer=@writer')
-      .params({ writer: 'Stephen Hawking' });
+  var session = connection.createSession();
 
-    session.find(query, function(err, books) {
-      console.log(books);
-    });
+  var query = Query.of(Book)
+    .ql('where writer=@writer')
+    .params({ writer: 'Stephen Hawking' });
+
+  session.find(query, function(err, books) {
+    console.log(books);
   });
 });
 ```
@@ -189,16 +189,16 @@ var engine = calypso.configure({
 });
 
 engine.build(function(err, connection) {
-  connection.open(function(err, session) {
-    var factory = RepositoryFactory.create(session);
+  var session = connection.createSession();
 
-    var bookRepository = factory.of(Book);
+  var factory = RepositoryFactory.create(session);
 
-    var id = 'd4d66224-f54e-11e2-9033-b1911fc0a0cc';
+  var bookRepository = factory.of(Book);
 
-    bookRepository.get(id, function(err, book) {
-      console.log(book);
-    });
+  var id = 'd4d66224-f54e-11e2-9033-b1911fc0a0cc';
+
+  bookRepository.get(id, function(err, book) {
+    console.log(book);
   });
 });
 
