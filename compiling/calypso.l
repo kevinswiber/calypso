@@ -60,7 +60,9 @@ escaped_name  \[(?:(?!\])[^\\]|\\.)*\]
                                           yytext = letterify(yytext);
                                           return 'COMPARISON';
                                         }
+<asgn>"not"                             return 'NOT'
 <asgn>"contains"                        return 'CONTAINS'
+<asgn>"like"                            return 'LIKE'
 <asgn>"within"                          {
                                           this.begin('loc');
                                           return 'WITHIN';

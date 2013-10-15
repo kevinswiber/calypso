@@ -89,6 +89,19 @@ Ast.ContainsPredicateNode.prototype.negate = function() {
   return this;
 };
 
+Ast.LikePredicateNode = function(field, value) {
+  this.field = field;
+  this.operator = 'like';
+  this.value = value;
+  this.isNegated = false;
+  this.type = 'LikePredicate';
+};
+
+Ast.LikePredicateNode.prototype.negate = function() {
+  this.isNegated = !this.isNegated;
+  return this;
+};
+
 Ast.LocationPredicateNode = function(field, value) {
   this.field = field;
   this.operator = 'within';

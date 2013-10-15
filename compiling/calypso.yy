@@ -68,19 +68,20 @@ filter
   | disjunction
   | '(' filter ')'
     { $$ = $2 }
-  | NOT filter
-    { $$ = $2.negate(); }
   ;
 
 predicate
   : comparison_predicate
   | contains_predicate
   | location_predicate
+  | like_predicate
   ;
 
 comparison_predicate
   : column COMPARISON literal 
     { $$ = new yy.ComparisonPredicateNode($1, $2, $3); }
+  | NOT comparison_predicate
+    { $$ = $2.negate(); }
   ;
 
 contains_predicate
@@ -88,11 +89,26 @@ contains_predicate
     { $$ = new yy.ContainsPredicateNode($1, $3); }
   | column CONTAINS PARAM
     { $$ = new yy.ContainsPredicateNode($1, $3); }
+  | NOT contains_predicate
+    { $$ = $2.negate(); }
+  ;
+
+like_predicate
+  : column LIKE STRING
+    { $$ = new yy.LikePredicateNode($1, $3); }
+  | column LIKE PARAM
+    { $$ = new yy.LikePredicateNode($1, $3); }
+  | column NOT LIKE STRING
+    { $$ = new yy.LikePredicateNode($1, $4).negate(); }
+  | column NOT LIKE PARAM
+    { $$ = new yy.LikePredicateNode($1, $4).negate(); }
   ;
 
 location_predicate
   : column WITHIN location
     { $$ = new yy.LocationPredicateNode($1, $3); }
+  | NOT location_predicate
+    { $$ = $2.negate(); }
   ;
 
 location
