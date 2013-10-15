@@ -9,7 +9,10 @@
 
 `npm install calypso`
 
-You'll also need a driver.  Check out the Usergrid driver here: https://github.com/kevinswiber/calypso-usergrid.
+You'll also need a driver.  Available drivers:
+
+* MongoDB: https://github.com/kevinswiber/calypso-mongodb
+* Usergrid: https://github.com/kevinswiber/calypso-usergrid
 
 `npm install calypso-usergrid`
 
