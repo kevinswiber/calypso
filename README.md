@@ -14,8 +14,6 @@ You'll also need a driver.  Available drivers:
 * MongoDB: https://github.com/kevinswiber/calypso-mongodb
 * Usergrid: https://github.com/kevinswiber/calypso-usergrid
 
-`npm install calypso-usergrid`
-
 ## Usage
 
 ```javascript
