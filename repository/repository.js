@@ -1,4 +1,4 @@
-var Query = require('calypso').Query;
+var Query = require('./').Query;
 
 var Repository = module.exports = function(session, model) {
   this.session = session;
