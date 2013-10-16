@@ -7,7 +7,7 @@ var Query = module.exports = function(modelConfig) {
   this.mapper = null;
   this.fields = [];
   this.filter = null;
-  this.orderBy = '';
+  this.sorts = [];
   this.querylang = null;
   this.preparedValues = null;
   this.raw = null;
@@ -30,7 +30,7 @@ Query.of = function(arg) {
 };
 
 Query.prototype.hasDetails = function() {
-  return this.fields.length || this.filter || this.orderBy.length;
+  return this.fields.length || this.filter;
 };
 
 Query.prototype.ql = function(ql, values) {
@@ -77,10 +77,7 @@ Query.prototype.select = function(fields) {
 
     var self = this;
     args.forEach(function(field) {
-      field = self.modelConfig.fieldMap.hasOwnProperty(field)
-                ? self.modelConfig.fieldMap[field]
-                : field;
-
+      field = getField(field, self.modelConfig);
       self.fields.push(field);
     });
   }
@@ -88,26 +85,37 @@ Query.prototype.select = function(fields) {
   return this;
 };
 
-Query.prototype.where = function(field, filter) {
-  field = this.modelConfig.fieldMap.hasOwnProperty(field)
-            ? this.modelConfig.fieldMap[field]
-            : field;
+Query.prototype.where = Query.prototype.and = function(field, filter) {
+  field = getField(field, this.modelConfig);
 
   var keys = Object.keys(filter);
-
   var f = null;
+  var isNegated = false;
 
-  if (keys[0] === 'contains') {
-    f = new Ast.ContainsPredicateNode(field, Query.escape(filter['contains']));
-  };
+  if (keys[0] === 'not') {
+    filter = filter['not']
+    keys = Object.keys(filter);
+    isNegated = true;
+  }
 
-  if (keys[0] === 'equals') {
-    f = new Ast.ComparisonPredicateNode(field, 'eq', Query.escape(filter['equals']));
-  };
+  var operator = keys[0];
+  switch(operator) {
+    case 'contains' :
+      f = new Ast.ContainsPredicateNode(field, Query.escape(filter[operator]));
+      break;
+    case 'like' :
+      f = new Ast.LikePredicateNode(field, Query.escape(filter[operator]));
+      break;
+    case 'gt':
+    case 'gte':
+    case 'lt':
+    case 'lte':
+      f = new Ast.ComparisonPredicateNode(field, operator, Query.escape(filter[operator]));
+      break;
+  }
 
-  if (['gt', 'gte', 'lt', 'lte'].indexOf(keys[0]) !== -1) {
-    var operator = keys[0];
-    f = new Ast.ComparisonPredicateNode(field, operator, Query.escape(filter[operator]));
+  if (isNegated) {
+    f.negate();
   }
 
   if (this.filter) {
@@ -115,6 +123,35 @@ Query.prototype.where = function(field, filter) {
   } else {
     this.filter = f;
   }
+
+  return this;
+};
+
+Query.prototype.orderBy = function() {
+  var args = Array.prototype.slice.call(arguments);
+  var self = this;
+  args.forEach(function(arg) {
+    if (typeof arg === 'object') {
+      var keys = Object.keys(arg);
+      keys.forEach(function(key) {
+        var field = key;
+        var direction = arg[key];
+
+        if (direction === 'ascending') {
+          direction = 'asc';
+        }
+        else if (direction === 'descending') {
+          direction = 'desc';
+        }
+
+        field = getField(field, self.modelConfig);
+        self.sorts.push({ field: field, direction: direction });
+      });
+    } else if (typeof arg === 'string') {
+      field = getField(arg, self.modelConfig);
+      self.sorts.push({ field: arg, direction: 'asc' });
+    }
+  });
 
   return this;
 };
@@ -135,7 +172,18 @@ Query.prototype.build = function() {
     fieldListNode.fields.push(new Ast.ColumnNode('*'));
   }
 
-  var statement = new Ast.SelectStatementNode(fieldListNode, this.filter, null);
+  var orderBy = null;
+  if (this.sorts.length) {
+    var sortList = new Ast.SortListNode();
+    sortList.sorts.length = 0;
+    this.sorts.forEach(function(sort) {
+      sortList.push(new Ast.SortNode(sort.field, sort.direction));
+    });
+
+    orderBy = new Ast.OrderByNode(sortList);
+  };
+
+  var statement = new Ast.SelectStatementNode(fieldListNode, this.filter, orderBy);
   return { type: 'ast', value: statement };
 };
 
@@ -167,3 +215,9 @@ Query.escape = function(value) {
 
   return val;
 };
+
+function getField(field, modelConfig) {
+  return modelConfig.fieldMap.hasOwnProperty(field)
+         ? modelConfig.fieldMap[field]
+         : field;
+}
