@@ -263,6 +263,16 @@ Less than or equal to: `select * where price <= 10`
 
 `select * where name contains "Kevin"`
 
+#### like
+
+`select * where name like "%evi%"`
+
+The percent symbol (`%`) acts as a wildcard character matching zero or more characters.
+
+The `like` operator can be negated with `not like`.
+
+`select * where name not like "%evi%"`
+
 #### location
 
 The location expression supports a distance along with a latitude, longitude pair.
