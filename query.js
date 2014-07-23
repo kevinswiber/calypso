@@ -1,4 +1,4 @@
-var Ast = require('./compiling/ast');
+var Ast = require('caql').Ast;
 var ConstructorMap = require('./constructor_map');
 
 var Query = module.exports = function(modelConfig) {

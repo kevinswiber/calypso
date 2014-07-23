@@ -1,10 +1,8 @@
 var ConstructorMap = require('./constructor_map');
 var Query = require('./query');
-var Parser = require('./compiling/bootstrapper');
 var Repository = require('./repository/repository');
 var RepositoryFactory = require('./repository/repository_factory');
 
-exports.Parser = Parser
 exports.Query = Query;
 exports.Repository = Repository;
 exports.RepositoryFactory = RepositoryFactory;
