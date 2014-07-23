@@ -5,7 +5,9 @@
   "description": "An example using Calypso",
   "main": "index.js",
   "dependencies": {
-    "calypso-usergrid": "*"
+    "calypso-usergrid": "*",
+    "glob": "^4.0.4",
+    "inflect-js": "^1.0.0"
   },
   "devDependencies": {},
   "scripts": {
