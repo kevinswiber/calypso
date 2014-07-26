@@ -13,6 +13,7 @@ You'll also need a driver.  Available drivers:
 
 * MongoDB: https://github.com/kevinswiber/calypso-mongodb
 * Usergrid: https://github.com/kevinswiber/calypso-usergrid
+* LevelDB/LevelUP: https://github.com/kevinswiber/calypso-level
 
 ## Usage
 
