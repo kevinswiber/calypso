@@ -22,7 +22,7 @@ Query.of = function(arg) {
       .at(arg)
       .bare();
   } else if(typeof arg === 'function') {
-    config = arg.__orm_model_config__;
+    config = arg.__calypsoModelConfig;
   }
 
   var query = new Query(config); 

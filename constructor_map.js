@@ -4,12 +4,13 @@ var ConstructorMap = module.exports = function() {
   this.fields = {};
   this.fieldMap = {};
   this.isBare = false;
+  this.key = '__calypsoKey';
 };
 
 ConstructorMap.prototype.of = function(constructor) {
   if (constructor) {
     this.constructor = constructor;
-    constructor.__orm_model_config__ = this;
+    constructor.__calypsoModelConfig = this;
   }
 
   return this;
