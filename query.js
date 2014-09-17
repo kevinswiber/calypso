@@ -110,6 +110,7 @@ Query.prototype.where = Query.prototype.and = function(field, filter) {
     case 'gte':
     case 'lt':
     case 'lte':
+    case 'eq':
       f = new Ast.ComparisonPredicateNode(field, operator, Query.escape(filter[operator]));
       break;
   }
