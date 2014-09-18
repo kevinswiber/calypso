@@ -86,7 +86,19 @@ Query.prototype.select = function(fields) {
 };
 
 Query.prototype.where = Query.prototype.and = function(field, filter) {
+  if (typeof field === 'object') {
+    var keys = Object.keys(field);
+    var query = this;
+
+    keys.forEach(function(key) {
+      query = query.where(key, { eq: field[key] });
+    });
+
+    return query;
+  }
+
   field = getField(field, this.modelConfig);
+
 
   var keys = Object.keys(filter);
   var f = null;
