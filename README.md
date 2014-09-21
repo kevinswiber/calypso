@@ -15,6 +15,7 @@ You'll also need a driver.  Available drivers:
 * Usergrid: https://github.com/kevinswiber/calypso-usergrid
 * LevelDB/LevelUP: https://github.com/kevinswiber/calypso-level
 * Memory: https://github.com/kevinswiber/calypso-memory
+* Postgres: https://gihub.com/mdobson/calypso-postgres
 
 ## Usage
 
